@@ -1,13 +1,10 @@
 package com.example.trainigkotlin
 
-import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.view_media_item.view.*
 
 
 /**
@@ -34,10 +31,15 @@ class MediaAdapter(private val list: List<MediaItem>) :
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         private val title = view.find<TextView>(R.id.txvTitle)
         private val thumbUrl = view.find<ImageView>(R.id.imvThumb)
+        private val mediaVideoIndicator = view.find<ImageView>(R.id.media_video_indicator)
 
         fun bind(item: MediaItem) {
             title.text = item.title
             thumbUrl.loadUrl(item.urlImg)
+            mediaVideoIndicator.visibility = when(item.type){
+                MediaItem.Type.PHOTO -> View.GONE
+                MediaItem.Type.VIDEO -> View.VISIBLE
+            }
         }
     }
 }
