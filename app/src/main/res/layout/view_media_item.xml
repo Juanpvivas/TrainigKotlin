@@ -13,7 +13,7 @@
         tools:src="@mipmap/ic_launcher" />
 
     <ImageView
-        android:id="@+id/media_video_indicator"
+        android:id="@+id/imgMediaIndicator"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"

@@ -30,7 +30,6 @@ fun ImageView.loadUrl(url: String) {
     Picasso.get().load(url).into(this)
 }
 
-inline fun <reified T: View> View.find(txvTitle: Int): T {
-    return findViewById(txvTitle)
-
+inline fun <reified T: View> RecyclerView.ViewHolder.find(id: Int): T {
+    return this.itemView.findViewById(id)
 }
