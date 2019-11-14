@@ -12,7 +12,8 @@ import kotlinx.android.synthetic.main.view_media_item.view.*
  */
 
 
-class MediaAdapter(private val list: List<MediaItem>) :
+class MediaAdapter(private val list: List<MediaItem>,
+                   private val callBack: (MediaItem)-> Unit) :
     RecyclerView.Adapter<MediaAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -21,7 +22,9 @@ class MediaAdapter(private val list: List<MediaItem>) :
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(list[position])
+        val mediaItem = list[position]
+        holder.bind(mediaItem)
+        holder.itemView.setOnClickListener { mediaItem }
     }
 
     override fun getItemCount(): Int = list.size
