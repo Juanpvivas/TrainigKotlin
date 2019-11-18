@@ -4,6 +4,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.view_media_item.view.*
+import java.util.*
+import kotlin.properties.Delegates
 
 
 /**
@@ -12,9 +14,12 @@ import kotlinx.android.synthetic.main.view_media_item.view.*
  */
 
 
-class MediaAdapter(private val list: List<MediaItem>,
-                   private val callBack: (MediaItem)-> Unit) :
+class MediaAdapter(private val listItems: List<MediaItem>, private val callBack: (MediaItem) -> Unit) :
     RecyclerView.Adapter<MediaAdapter.ViewHolder>() {
+
+    var list: List<MediaItem> by Delegates.observable(listItems) { _, _, _ ->
+        notifyDataSetChanged()
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val v = parent.inflate(R.layout.view_media_item)
@@ -24,7 +29,7 @@ class MediaAdapter(private val list: List<MediaItem>,
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val mediaItem = list[position]
         holder.bind(mediaItem)
-        holder.itemView.setOnClickListener { mediaItem }
+        holder.itemView.setOnClickListener { callBack(mediaItem) }
     }
 
     override fun getItemCount(): Int = list.size
@@ -35,7 +40,7 @@ class MediaAdapter(private val list: List<MediaItem>,
             itemView.apply {
                 txvTitle.text = item.title
                 imvThumb.loadUrl(item.urlImg)
-                imgMediaIndicator.visibility = when(item.type){
+                imgMediaIndicator.visibility = when (item.type) {
                     MediaItem.Type.PHOTO -> View.GONE
                     MediaItem.Type.VIDEO -> View.VISIBLE
                 }
