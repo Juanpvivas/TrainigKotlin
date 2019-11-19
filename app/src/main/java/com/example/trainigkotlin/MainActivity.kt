@@ -8,13 +8,12 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
-    private val adapter = MediaAdapter(getMedia()) { (title) -> toast(title) }
+    private val adapter = MediaAdapter { (title) -> toast(title) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         recycler.adapter = adapter
-
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -24,9 +23,17 @@ class MainActivity : AppCompatActivity() {
 
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when(item.itemId){
-            R.id.filter_all -> {}
+        adapter.list = getMedia().let { media ->
+            when (item.itemId) {
+                R.id.filter_all -> media
+                R.id.filter_photos -> media.filter { it.type == MediaItem.Type.PHOTO }
+                R.id.filter_videos -> media.filter { it.type == MediaItem.Type.VIDEO }
+                else -> emptyList()
+            }
         }
-        return super.onOptionsItemSelected(item)
+
+        return true
     }
+
+
 }

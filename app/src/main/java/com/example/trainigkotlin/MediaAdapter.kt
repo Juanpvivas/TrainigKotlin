@@ -14,10 +14,10 @@ import kotlin.properties.Delegates
  */
 
 
-class MediaAdapter(private val listItems: List<MediaItem>, private val callBack: (MediaItem) -> Unit) :
+class MediaAdapter(private val callBack: (MediaItem) -> Unit) :
     RecyclerView.Adapter<MediaAdapter.ViewHolder>() {
 
-    var list: List<MediaItem> by Delegates.observable(listItems) { _, _, _ ->
+    var list: List<MediaItem> by Delegates.observable(emptyList()) { _, _, _ ->
         notifyDataSetChanged()
     }
 
