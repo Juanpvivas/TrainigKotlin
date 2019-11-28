@@ -5,6 +5,9 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.jetbrains.anko.startActivity
 
 class MainActivity : AppCompatActivity() {
@@ -15,6 +18,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         recycler.adapter = adapter
+        MediaProvider.dataAsync { updateData(it) }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -26,21 +30,28 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
 
         val filter = when (item.itemId) {
+            R.id.filter_all -> Filter.None
             R.id.filter_photos -> Filter.ByType(MediaItem.Type.PHOTO)
             R.id.filter_videos -> Filter.ByType(MediaItem.Type.VIDEO)
-            else -> Filter.None
+            else -> null
         }
 
-        loadFilter(filter)
+        filter?.let {
+
+            CoroutineScope(Dispatchers.IO).launch {
+                val media1 = MediaProvider.dataSync("cats")
+                val media2 = MediaProvider.dataSync("nature")
+                updateData(media1 + media2)
+            }
+        }
+
         return true
     }
 
-    private fun loadFilter(filter: Filter) {
-        MediaProvider.dataAsync { media ->
-            adapter.list = when (filter) {
-                is Filter.ByType -> media.filter { it.type == filter.data }
-                Filter.None -> media
-            }
+    private fun updateData(media: List<MediaItem>, filter: Filter = Filter.None) {
+        adapter.list = when (filter) {
+            is Filter.ByType -> media.filter { it.type == filter.data }
+            Filter.None -> media
         }
     }
 

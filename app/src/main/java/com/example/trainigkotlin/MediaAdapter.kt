@@ -12,8 +12,9 @@ import kotlin.properties.Delegates
  * Copyright (c) 2019 Merqueo. All rights reserved.
  */
 
+typealias Listener = (MediaItem) -> Unit
 
-class MediaAdapter(private val callBack: (MediaItem) -> Unit) :
+class MediaAdapter(private val listener: Listener) :
     RecyclerView.Adapter<MediaAdapter.ViewHolder>() {
 
     var list: List<MediaItem> by Delegates.observable(emptyList()) { _, _, _ ->
@@ -28,7 +29,7 @@ class MediaAdapter(private val callBack: (MediaItem) -> Unit) :
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val mediaItem = list[position]
         holder.bind(mediaItem)
-        holder.itemView.setOnClickListener { callBack(mediaItem) }
+        holder.itemView.setOnClickListener { listener(mediaItem) }
     }
 
     override fun getItemCount(): Int = list.size
