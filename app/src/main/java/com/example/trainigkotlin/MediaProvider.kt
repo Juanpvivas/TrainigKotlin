@@ -15,6 +15,7 @@ object MediaProvider {
                 Thread.sleep(2000)
                 data = (1..10).map {
                     MediaItem(
+                        it,
                         "Title $it",
                         thumbBase.plus(it),
                         if (it % 3 == 0) MediaItem.Type.VIDEO else MediaItem.Type.PHOTO
@@ -24,7 +25,6 @@ object MediaProvider {
             uiThread {
                 callBack(data)
             }
-
         }
     }
 }

@@ -4,12 +4,12 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
-import com.example.trainigkotlin.MediaProvider.dataAsync
 import kotlinx.android.synthetic.main.activity_main.*
+import org.jetbrains.anko.startActivity
 
 class MainActivity : AppCompatActivity() {
 
-    private val adapter = MediaAdapter { (title) -> toast(title) }
+    private val adapter = MediaAdapter { (id) -> navigateToDetail((id)) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,20 +24,28 @@ class MainActivity : AppCompatActivity() {
 
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        dataAsync { data ->
-            adapter.list = data.let { media ->
-                when (item.itemId) {
-                    R.id.filter_all -> media
-                    R.id.filter_photos -> media.filter { it.type == MediaItem.Type.PHOTO }
-                    R.id.filter_videos -> media.filter { it.type == MediaItem.Type.VIDEO }
-                    else -> emptyList()
-                }
-            }
+
+        val filter = when (item.itemId) {
+            R.id.filter_photos -> Filter.ByType(MediaItem.Type.PHOTO)
+            R.id.filter_videos -> Filter.ByType(MediaItem.Type.VIDEO)
+            else -> Filter.None
         }
 
-
+        loadFilter(filter)
         return true
     }
 
+    private fun loadFilter(filter: Filter) {
+        MediaProvider.dataAsync { media ->
+            adapter.list = when (filter) {
+                is Filter.ByType -> media.filter { it.type == filter.data }
+                Filter.None -> media
+            }
+        }
+    }
+
+    private fun navigateToDetail(id: Int) {
+        startActivity<DetailActivity>(DetailActivity.ID to id)
+    }
 
 }

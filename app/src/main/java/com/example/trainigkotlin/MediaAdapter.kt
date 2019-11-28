@@ -4,7 +4,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.view_media_item.view.*
-import java.util.*
 import kotlin.properties.Delegates
 
 
