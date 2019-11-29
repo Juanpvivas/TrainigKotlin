@@ -8,11 +8,12 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.jetbrains.anko.startActivity
 
 class MainActivity : AppCompatActivity() {
 
-    private val adapter = MediaAdapter { (id) -> navigateToDetail((id)) }
+    private val adapter = MediaAdapter { (id) -> navigateToDetail(id) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,9 +39,9 @@ class MainActivity : AppCompatActivity() {
 
         filter?.let {
 
-            CoroutineScope(Dispatchers.IO).launch {
-                val media1 = MediaProvider.dataSync("cats")
-                val media2 = MediaProvider.dataSync("nature")
+            CoroutineScope(Dispatchers.Main).launch {
+                val media1 = withContext(Dispatchers.IO) { MediaProvider.dataSync("cats") }
+                val media2 = withContext(Dispatchers.IO) { MediaProvider.dataSync("nature") }
                 updateData(media1 + media2)
             }
         }

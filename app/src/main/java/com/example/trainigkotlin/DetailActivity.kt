@@ -9,6 +9,7 @@ class DetailActivity : AppCompatActivity() {
 
     companion object {
         const val ID = "DetailActivity:id"
+        const val TYPE = "DetailActivity:string"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
