@@ -5,14 +5,14 @@ import org.jetbrains.anko.uiThread
 
 object MediaProvider {
 
-    private const val thumbBase = "http://lorempixel.com/400/400/cats/"
+    private const val thumbBase = "http://placeimg.com/640/480/animals/"
 
     private var data = emptyList<MediaItem>()
 
     fun dataAsync(callBack: (List<MediaItem>) -> Unit) {
         doAsync {
             if (data.isEmpty()) {
-                Thread.sleep(2000)
+                Thread.sleep(4000)
                 data = (1..10).map {
                     MediaItem(
                         it,
